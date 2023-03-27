@@ -18,9 +18,15 @@ const initialState: AuthState = {
   nombre: ''
 }
 
-type AuthAction ={
-  type: 'logout'
+type LoginPayload = { 
+  username: string,
+  nombre: string
 }
+
+type AuthAction = 
+|{type: 'logout'}
+|{type: 'login', payload:LoginPayload}
+
 //Creamos un authReducer el cual tendra por estado nuestro AuthState y AuthAction
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 //El state nunca puede mutar es decir modificar
@@ -34,6 +40,15 @@ switch (action.type) {
     username: ''
   }  
   
+  case 'login':
+    //Desestructuracion 
+    const {nombre, username} = action.payload;
+    return{
+    validando: false,
+    token: 'ABC123',
+    nombre,
+    username
+  }
 
   default:
     return state;
@@ -49,9 +64,18 @@ export const Login = () => {
     }, 1500);
   }, []);
 
+  const login = () => {
+    dispatch({type: 'login', payload: {
+  nombre: 'Yhonattan',
+  username:'Lunafxll'
+    }})
+  }
   
+  const logout = () => {
+    dispatch({type:'logout'});
+  }
   //Inicializamos el useReducer, para hacerlo debemos tener un reducer y un valor inicial para ese reducer.
-  const [{validando}, dispatch] = useReducer(authReducer, initialState);
+  const [{validando,token, nombre}, dispatch] = useReducer(authReducer, initialState);
   
   if(validando){
     return (<>
@@ -63,12 +87,16 @@ export const Login = () => {
   return (
     <>
     <h1>Login</h1>
+
+    {(token) ? 
+    <div className="alert alert-success">Autenticado como: {nombre}</div>
+     :<div className="alert alert-danger"> No Autenticado</div>
+    }
+{(token) ? 
+<button className="btn btn-danger"onClick={logout}>Logout</button> 
+: <button className="btn btn-primary" onClick={login}>Login</button>
+ }
     
-    <div className="alert alert-danger"> No Autenticado</div>
-    <div className="alert alert-success">Autenticado</div>
-    <button className="btn btn-primary btn-rounded waves-effect waves-light">Login</button>
-    &nbsp; 
-    <button className="btn btn-danger">Login</button>
     </>
   )
 }
