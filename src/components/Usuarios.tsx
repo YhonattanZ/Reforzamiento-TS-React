@@ -1,35 +1,12 @@
-import React, { useRef } from 'react'
-import { useEffect, useState } from 'react';
-import { reqResAPI } from '../api/reqRes';
-import { ReqResList, Usuario } from '../interfaces/reqRes';
+import React from 'react'
+import { Usuario } from '../interfaces/reqRes';
+import { useUsuarios } from '../hooks/useUsuarios';
+
 
 export const Usuarios = () => {
 
-//useState para renderizar la informacion
-// The React useState Hook allows us to track state in a function component.
-// State generally refers to data or properties that need to be tracking in an application.
-const [usuarios, setUsuarios] = useState<Usuario[]>([]);  
-const paginaRef = useRef(0);
-//Le decimos a React que el componente necesita hacer algo despues de renderizarse
-useEffect(() => {
-  //API call
-cargarUsuarios();
-}, [])
+const {usuarios, cargarUsuarios} =useUsuarios(); 
 
-const cargarUsuarios =async () => {
-    const resp = await reqResAPI.get<ReqResList>('/users', {
-        params: {
-            page: paginaRef.current 
-        }
-    })
-    if(resp.data.data.length > 0){
-        setUsuarios(resp.data.data);
-        paginaRef.current++;
-    }else{
-        alert('No hay mas registros');
-    }
-      
-}
 //Creamos un componente para renderizar la informacion traida del API
 const renderInfo = ({id,first_name,last_name,email,avatar}: Usuario) =>{
     return (
@@ -61,7 +38,11 @@ const renderInfo = ({id,first_name,last_name,email,avatar}: Usuario) =>{
  </table>
  
  <button className='btn btn-primary' onClick={cargarUsuarios}>
-    Siguiente
+   Pagina anterior
+ </button>
+ &nbsp;
+ <button className='btn btn-primary' onClick={cargarUsuarios}>
+    Pagina siguiente
  </button>
  </>
   )
