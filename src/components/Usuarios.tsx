@@ -5,7 +5,7 @@ import { useUsuarios } from '../hooks/useUsuarios';
 
 export const Usuarios = () => {
 
-const {usuarios, cargarUsuarios} =useUsuarios(); 
+const {usuarios, paginaAnterior,paginaSiguiente} =useUsuarios(); 
 
 //Creamos un componente para renderizar la informacion traida del API
 const renderInfo = ({id,first_name,last_name,email,avatar}: Usuario) =>{
@@ -37,11 +37,11 @@ const renderInfo = ({id,first_name,last_name,email,avatar}: Usuario) =>{
     </tbody>
  </table>
  
- <button className='btn btn-primary' onClick={cargarUsuarios}>
+ <button className='btn btn-primary' onClick={paginaAnterior}>
    Pagina anterior
  </button>
  &nbsp;
- <button className='btn btn-primary' onClick={cargarUsuarios}>
+ <button className='btn btn-primary' onClick={paginaSiguiente}>
     Pagina siguiente
  </button>
  </>
